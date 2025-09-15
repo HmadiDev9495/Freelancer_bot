@@ -1,0 +1,15 @@
+digraph G {
+    rankdir=LR; // Example attribute
+    node [shape=box]; // Default node shape
+
+    // Define nodes
+    start [label="Start"];
+    process [label="Process Data"];
+    end [label="End"];
+
+    // Define edges (connections)
+    start -> process;
+    process -> end;
+
+    // You can add more nodes, edges, and attributes
+}
