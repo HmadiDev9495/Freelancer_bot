@@ -1,4 +1,3 @@
--- SQL schema for freelance_bot database
 CREATE TABLE IF NOT EXISTS `user` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `telegram_id` BIGINT UNIQUE NOT NULL,
@@ -10,17 +9,15 @@ CREATE TABLE IF NOT EXISTS `user` (
   `profile_picture` VARCHAR(255) DEFAULT NULL,
   `bio` TEXT DEFAULT NULL,
   `hourly_rate` DECIMAL(10,2) DEFAULT NULL,
-  `login_attempts` TINYINT DEFAULT 0,
-  `last_failed_login` DATETIME DEFAULT NULL,
-  `account_locked` BOOLEAN DEFAULT FALSE,
-  `password_changed_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  `password_expiry_date` DATETIME DEFAULT NULL,
-  `two_factor_enabled` BOOLEAN DEFAULT FALSE,
+  `phone` VARCHAR(20) DEFAULT NULL,
+  `linkedin` VARCHAR(255) DEFAULT NULL,
+  `github` VARCHAR(255) DEFAULT NULL,
+  `website` VARCHAR(255) DEFAULT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `last_login` DATETIME DEFAULT NULL,
   INDEX (`telegram_id`),
   INDEX (`email`),
-  INDEX (`account_locked`)
+  INDEX (`role`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `skill` (
@@ -38,3 +35,27 @@ CREATE TABLE IF NOT EXISTS `user_skill` (
   FOREIGN KEY (`skill_id`) REFERENCES `skill`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS `project` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `employer_id` INT NOT NULL,
+  `title` VARCHAR(255) NOT NULL,
+  `description` TEXT,
+  `category` VARCHAR(100) DEFAULT NULL,
+  `role` ENUM('freelancer','employer') DEFAULT NULL,
+  `budget` DECIMAL(10,2) DEFAULT NULL,
+  `delivery_days` INT DEFAULT NULL,
+  `status` ENUM('draft','open','in_progress','done','cancelled') NOT NULL DEFAULT 'draft',
+  `progress` TINYINT UNSIGNED DEFAULT 0,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`employer_id`) REFERENCES `user`(`id`) ON DELETE CASCADE,
+  UNIQUE KEY `uniq_employer_title` (`employer_id`,`title`)
+) ENGINE=InnoDB;
+ALTER TABLE `project` ADD COLUMN `budget` DECIMAL(10,2) NULL AFTER `role`;
+ALTER TABLE `project` ADD COLUMN `status`
+  ENUM('draft','open','in_progress','done','cancelled')
+  NOT NULL DEFAULT 'draft';
+ALTER TABLE `project` ADD COLUMN `progress` TINYINT UNSIGNED DEFAULT 0;
+ALTER TABLE `project` ADD COLUMN `updated_at` TIMESTAMP NULL DEFAULT NULL
+  ON UPDATE CURRENT_TIMESTAMP;
