@@ -1,4 +1,5 @@
 import os
+import logging
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,4 +11,8 @@ class Config:
     DB_PASSWORD = os.getenv("DB_PASSWORD", "password")
     DB_NAME     = os.getenv("DB_NAME", "freelance_bot")
     DB_PORT     = int(os.getenv("DB_PORT", 3306))
-    LOG_LEVEL   = os.getenv("LOG_LEVEL", "ERROR")  # فقط ارور نشان بده
+    LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+
+    @staticmethod
+    def loglevel_numeric() -> int:
+        return getattr(logging, str(Config.LOG_LEVEL).upper(), logging.INFO)

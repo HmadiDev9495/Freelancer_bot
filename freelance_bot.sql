@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `project` (
   `description` TEXT,
   `category` VARCHAR(100) DEFAULT NULL,
   `role` ENUM('freelancer','employer') DEFAULT NULL,
-  `budget` DECIMAL(10,2) DEFAULT NULL,
+  `budget` DECIMAL(12,2) DEFAULT NULL,
   `delivery_days` INT DEFAULT NULL,
   `status` ENUM('draft','open','in_progress','done','cancelled') NOT NULL DEFAULT 'draft',
   `progress` TINYINT UNSIGNED DEFAULT 0,
